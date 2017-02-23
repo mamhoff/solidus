@@ -11,12 +11,12 @@ module Spree
       #   those marked frontend if truthy
       # @return [Array<Spree::ShippingRate>] the shipping rates sorted by
       #   descending cost, with the least costly marked "selected"
-      def shipping_rates(package, frontend_only = true)
+      def shipping_rates(package, _frontend_only = true)
         raise ShipmentRequired if package.shipment.nil?
         raise OrderRequired if package.shipment.order.nil?
 
         rates = calculate_shipping_rates(package)
-        rates.select! { |rate| rate.shipping_method.available_to_users? } if frontend_only
+        rates.select! { |rate| rate.shipping_method.available_to_users? } if package.shipment.order.frontend_viewable
         choose_default_shipping_rate(rates)
         Spree::Config.shipping_rate_sorter_class.new(rates).sort
       end

@@ -11,6 +11,7 @@ describe "Order Details", type: :feature, js: true do
   let(:state) { create(:state) }
   # let(:shipment) { create(:shipment, order: order, stock_location: stock_location) }
   let!(:shipping_method) { create(:shipping_method, name: "Default") }
+  let!(:backend_only_shipping_method) { create(:shipping_method, name: "Backend Shipping", available_to_users: false) }
 
   before do
     @shipment1 = order.shipments.create(stock_location_id: stock_location.id)
@@ -115,6 +116,20 @@ describe "Order Details", type: :feature, js: true do
           visit spree.edit_admin_order_path(order)
           sku = order.line_items.first.variant.sku
           expect(page).to have_content("SKU: #{sku}")
+        end
+
+        it "can change the shipping method for a backend only one" do
+          order = create(:order_with_line_items)
+          visit spree.edit_admin_order_path(order)
+          within("table.index tr.show-method") do
+            click_icon :edit
+          end
+          save_and_open_page
+          select2 "Backend Shipping", from: "Shipping Method"
+          click_icon :check
+
+          expect(page).not_to have_css('#selected_shipping_rate_id')
+          expect(page).to have_content("Backend Shipping")
         end
       end
 
