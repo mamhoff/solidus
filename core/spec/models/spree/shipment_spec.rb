@@ -137,6 +137,23 @@ describe Spree::Shipment, type: :model do
     it 'should equal line items final amount with tax' do
       expect(shipment.item_cost).to eql(11.0)
     end
+
+    context "when the line item is split between two shipments" do
+      let(:order) { create(:completed_order_with_totals) }
+      let(:stock_location) { create(:stock_location) }
+
+      before do
+        order.line_items.first.update(quantity: 2)
+        order.shipments.first.transfer_to_location(order.line_items.first.variant, 1, stock_location)
+      end
+
+      it 'should equal shipment line items amount with tax' do
+        aggregate_failures do
+          expect(order.shipments.first.item_cost).to eql(10.0)
+          expect(order.shipments.last.item_cost).to eql(10.0)
+        end
+      end
+    end
   end
 
   it "#discounted_cost" do
