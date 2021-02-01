@@ -1,5 +1,13 @@
 ## Solidus 3.0.0 (master, unreleased)
 
+Migrated default billing addresses to address book
+
+Spree::User records have a default bill_address_id that is not in use since
+Solidus 2.11.0. Instead, we rely on a default_billing Boolean on the
+spree_user_addresses join table. 
+Please run `rake solidus:upgrade:two_point_eleven`
+to make sure your default addresses are migrated accordingly.
+
 ## Solidus 2.11.0 (2020-10-23)
 
 ### Major Changes
