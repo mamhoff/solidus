@@ -12,6 +12,7 @@ RSpec.describe Spree::Calculator, type: :model do
   class SimpleComputable
   end
 
+<<<<<<< HEAD
   describe "#calculators" do
     before do
       expect(Spree::Deprecation).to receive(:warn).
@@ -23,6 +24,12 @@ RSpec.describe Spree::Calculator, type: :model do
     it 'returns the (deprecated) calculator step' do
       expect(subject).to be_a Spree::Core::Environment::Calculators
     end
+=======
+  describe "preferences" do
+    subject { SimpleCalculator.new.preferences }
+
+    it { is_expected.to eq({}) }
+>>>>>>> 670c2a57d (Fix preferences columns to be always serialized)
   end
 
   context "with computable" do
