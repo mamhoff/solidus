@@ -19,6 +19,13 @@ module Spree::Preferences
     end
 
     def preference(name, type, options = {})
+      if Object.const_defined?("Spree::Base") && self < Spree::Base && !self.new.preferences.is_a?(Hash)
+        serialize :preferences, Hash
+        after_initialize :initialize_preference_defaults
+        Spree::Deprecation.warn("Individual classes need to initialize preferences Serialization on their own now.")
+        Spree::Deprecation.warn("Class in questions: #{self.name}")
+      end
+
       options.assert_valid_keys(:default, :encryption_key)
 
       if type == :encrypted_string
