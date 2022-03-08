@@ -14,6 +14,12 @@ module Spree
              inverse_of: :shipping_rate,
              dependent: :destroy
 
+    has_many :discounts,
+             class_name: "Spree::ShippingRateDiscount",
+             foreign_key: :shipping_rate_id,
+             inverse_of: :shipping_rate,
+             dependent: :destroy
+
     delegate :order, :currency, to: :shipment
     delegate :name, :tax_category, :tax_category_id, to: :shipping_method
     delegate :code, to: :shipping_method, prefix: true
