@@ -322,6 +322,13 @@ module Spree
     #   Spree::TaxCalculator::ShippingRate
     class_name_attribute :shipping_rate_tax_calculator_class, default: 'Spree::TaxCalculator::ShippingRate'
 
+    # Allows providing your own class for calculating taxes on a shipping rate.
+    #
+    # @!attribute [rw] shipping_rate_tax_calculator_class
+    # @return [Class] a class with the same public interfaces as
+    #   Spree::TaxCalculator::ShippingRate
+    class_name_attribute :shipping_rate_promotion_handler_class, default: 'Spree::PromotionHandler::ShippingRate'
+
     # Allows providing your own Mailer for order mailer.
     #
     # @!attribute [rw] order_mailer_class

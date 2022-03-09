@@ -33,8 +33,11 @@ module Spree
       end
 
       def calculate_shipping_rates(package)
+        order = package.shipment.order
         tax_calculator_class = Spree::Config.shipping_rate_tax_calculator_class
-        tax_calculator = tax_calculator_class.new(package.shipment.order)
+        tax_calculator = tax_calculator_class.new(order)
+        promotion_handler_class = Spree::Config.shipping_rate_promotion_handler_class
+        promotion_handler = promotion_handler_class.new(order)
         shipping_methods(package).map do |shipping_method|
           cost = shipping_method.calculator.compute(package)
           if cost
@@ -42,6 +45,7 @@ module Spree
               cost: cost,
               shipment: package.shipment
             )
+            promotion_handler.activate(shipping_rate)
             tax_calculator.calculate(rate).each do |tax|
               rate.taxes.new(
                 amount: tax.amount,
