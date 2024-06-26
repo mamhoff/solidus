@@ -122,7 +122,7 @@ commands:
           command: ./bin/build-ci legacy_promotions
       - run:
           name: "Run Friendly Promotion Tests"
-          command: ./bin/build-ci friendly_promotions
+          command: ./bin/build-ci promotions
 
       - store_artifacts:
           path: /tmp/test-artifacts

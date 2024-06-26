@@ -28,7 +28,7 @@ class Project
       new('core', weight: 266),
       new('sample', weight: 28),
       new('legacy_promotions', weight: 63),
-      new('friendly_promotions', weight: 63)
+      new('promotions', weight: 63)
     ]
   end
 

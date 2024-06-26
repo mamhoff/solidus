@@ -64,8 +64,8 @@ group :legacy_promotions do
   gem 'axe-core-capybara', '~> 4.8', require: false
 end
 
-group :friendly_promotions do
-  gem 'solidus_friendly_promotions', path: 'friendly_promotions', require: false
+group :promotions do
+  gem 'solidus_promotions', path: 'promotions', require: false
   gem 'solidus_admin', path: 'admin', require: false
   gem 'solidus_backend', path: 'backend', require: false
   gem 'axe-core-rspec', '~> 4.8', require: false
