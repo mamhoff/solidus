@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SolidusAdmin::Users::Index::Component < SolidusAdmin::UsersAndRoles::Component
+  include SolidusAdmin::LastLoginHelper
+
   def model_class
     Spree.user_class
   end
@@ -14,7 +16,7 @@ class SolidusAdmin::Users::Index::Component < SolidusAdmin::UsersAndRoles::Compo
   end
 
   def row_url(user)
-    spree.admin_user_path(user)
+    solidus_admin.edit_user_path(user)
   end
 
   def page_actions
@@ -39,11 +41,11 @@ class SolidusAdmin::Users::Index::Component < SolidusAdmin::UsersAndRoles::Compo
 
   def scopes
     [
-      { name: :customers, label: t('.scopes.customers'), default: true },
+      { name: :all, label: t('.scopes.all'), default: true },
+      { name: :customers, label: t('.scopes.customers') },
       { name: :admin, label: t('.scopes.admin') },
       { name: :with_orders, label: t('.scopes.with_orders') },
       { name: :without_orders, label: t('.scopes.without_orders') },
-      { name: :all, label: t('.scopes.all') },
     ]
   end
 
@@ -88,8 +90,8 @@ class SolidusAdmin::Users::Index::Component < SolidusAdmin::UsersAndRoles::Compo
         data: -> { _1.display_lifetime_value.to_html },
       },
       {
-        header: :created_at,
-        data: ->(user) { l(user.created_at.to_date, format: :long) },
+        header: :last_active,
+        data: ->(user) { last_login(user) },
       },
     ]
   end

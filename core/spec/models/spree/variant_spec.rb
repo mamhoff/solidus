@@ -7,6 +7,28 @@ RSpec.describe Spree::Variant, type: :model do
 
   let!(:variant) { create(:variant) }
 
+  describe '.non_template_variants' do
+    let(:option_type) { create(:option_type, option_values: [option_value]) }
+    let(:option_value) { build(:option_value) }
+    let(:product) { create(:product, option_types: [option_type]) }
+    let!(:variant) { create(:variant, product: product) }
+
+    subject { described_class.non_template_variants }
+
+    it { is_expected.to contain_exactly(variant) }
+  end
+
+  describe '.template_variants' do
+    let(:option_type) { create(:option_type, option_values: [option_value]) }
+    let(:option_value) { build(:option_value) }
+    let(:product) { create(:product, option_types: [option_type]) }
+    let!(:variant) { create(:variant, product: product) }
+
+    subject { described_class.template_variants }
+
+    it { is_expected.to contain_exactly(product.master) }
+  end
+
   describe 'delegates' do
     let(:product) { build(:product) }
     let(:variant) { build(:variant, product: product) }
@@ -884,6 +906,18 @@ RSpec.describe Spree::Variant, type: :model do
 
       it "returns all in stock variants" do
         expect(subject).to eq [in_stock_variant]
+      end
+
+      context "with stock in several locations" do
+        let!(:other_stock_location) { create(:stock_location, propagate_all_variants: true) }
+
+        before do
+          Spree::StockItem.where(variant: in_stock_variant).update_all(count_on_hand: 10)
+        end
+
+        it "returns just one variant" do
+          expect(subject).to eq([in_stock_variant])
+        end
       end
     end
 

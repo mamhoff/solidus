@@ -80,6 +80,11 @@ module Spree
 
     after_destroy :destroy_option_values_variants
 
+    scope :template_variants, -> do
+      left_joins(product: { option_types: :option_values }).where(is_master: true).where.not(spree_option_values: { id: nil }).reorder(nil).distinct
+    end
+    scope :non_template_variants, -> { where.not(id: template_variants) }
+
     # Returns variants that are in stock. When stock locations are provided as
     # a parameter, the scope is limited to variants that are in stock in the
     # provided stock locations.
@@ -94,7 +99,7 @@ module Spree
       if stock_locations.present?
         in_stock_variants = in_stock_variants.where(spree_stock_items: { stock_location_id: stock_locations.map(&:id) })
       end
-      in_stock_variants
+      in_stock_variants.distinct
     end
 
     # Returns a scope of Variants which are suppliable. This includes:
@@ -194,7 +199,7 @@ module Spree
     #
     # @return [String] a sentence-ified string of option values.
     def options_text
-      values = option_values.includes(:option_type).sort_by do |option_value|
+      values = option_values.sort_by do |option_value|
         option_value.option_type.position
       end
 

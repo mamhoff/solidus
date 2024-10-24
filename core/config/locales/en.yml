@@ -410,6 +410,7 @@ en:
         analytics_id: Analytics ID
       spree/user:
         email: Email
+        last_active: Last active
         lifetime_value: Total spent
         password: Password
         password_confirmation: Password Confirmation
@@ -1854,6 +1855,7 @@ en:
     order_approved: Order approved
     order_canceled: Order canceled
     order_completed: Order completed
+    order_count: Order Count
     order_details: Order Details
     order_email_resent: Order Email Resent
     order_information: Order Information
