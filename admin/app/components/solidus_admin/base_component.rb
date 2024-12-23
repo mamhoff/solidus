@@ -37,5 +37,6 @@ module SolidusAdmin
     end
 
     delegate :stimulus_id, to: :class
+    delegate :turbo_frame_request?, :search_filter_params, to: :helpers
   end
 end
