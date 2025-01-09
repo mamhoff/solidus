@@ -16,10 +16,7 @@ module SolidusAdmin
 
     def new
       @return_reason = Spree::ReturnReason.new
-
-      respond_to do |format|
-        format.html { render component('return_reasons/new').new(return_reason: @return_reason) }
-      end
+      render component('return_reasons/new').new(@return_reason, closable: turbo_frame_request?)
     end
 
     def create
@@ -30,12 +27,12 @@ module SolidusAdmin
         redirect_to solidus_admin.return_reasons_path(**search_filter_params), status: :see_other
       else
         respond_to do |format|
+          page_component = component('return_reasons/new').new(@return_reason, closable: turbo_frame_request?)
           format.html do
-            page_component = component('return_reasons/new').new(return_reason: @return_reason)
             render page_component, status: :unprocessable_entity
           end
           format.turbo_stream do
-            render status: :unprocessable_entity
+            render turbo_stream: turbo_stream.replace(:new_return_reason_modal, page_component), status: :unprocessable_entity
           end
         end
       end

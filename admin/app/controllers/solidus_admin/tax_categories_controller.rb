@@ -26,24 +26,17 @@ module SolidusAdmin
       @tax_category = Spree::TaxCategory.new(tax_category_params)
 
       if @tax_category.save
-        respond_to do |format|
-          flash[:notice] = t('.success')
-
-          format.html do
-            redirect_to solidus_admin.tax_categories_path, status: :see_other
-          end
-
-          format.turbo_stream do
-            # we need to explicitly write the refresh tag for now.
-            # See https://github.com/hotwired/turbo-rails/issues/579
-            render turbo_stream: '<turbo-stream action="refresh" />'
-          end
-        end
+        flash[:notice] = t('.success')
+        redirect_to solidus_admin.tax_categories_path, status: :see_other
       else
+        page_component = component('tax_categories/new').new(tax_category: @tax_category)
+
         respond_to do |format|
           format.html do
-            page_component = component('tax_categories/new').new(tax_category: @tax_category)
             render page_component, status: :unprocessable_entity
+          end
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(@tax_category, page_component), status: :unprocessable_entity
           end
         end
       end
@@ -51,22 +44,17 @@ module SolidusAdmin
 
     def update
       if @tax_category.update(tax_category_params)
-        respond_to do |format|
-          flash[:notice] = t('.success')
-
-          format.html do
-            redirect_to solidus_admin.tax_categories_path, status: :see_other
-          end
-
-          format.turbo_stream do
-            render turbo_stream: '<turbo-stream action="refresh" />'
-          end
-        end
+        flash[:notice] = t('.success')
+        redirect_to solidus_admin.tax_categories_path, status: :see_other
       else
+        page_component = component('tax_categories/edit').new(tax_category: @tax_category)
+
         respond_to do |format|
           format.html do
-            page_component = component('tax_categories/edit').new(tax_category: @tax_category)
             render page_component, status: :unprocessable_entity
+          end
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(:edit_tax_category_modal, page_component), status: :unprocessable_entity
           end
         end
       end

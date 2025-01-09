@@ -18,7 +18,7 @@ class SolidusAdmin::TaxCategories::Index::Component < SolidusAdmin::Taxes::Compo
       tag: :a,
       text: t('.add'),
       href: solidus_admin.new_tax_category_path, data: {
-        turbo_frame: :new_tax_category_modal,
+        turbo_frame: :new_tax_category,
         turbo_prefetch: false,
       },
       icon: "add-line",
@@ -28,7 +28,7 @@ class SolidusAdmin::TaxCategories::Index::Component < SolidusAdmin::Taxes::Compo
 
   def turbo_frames
     %w[
-      new_tax_category_modal
+      new_tax_category
       edit_tax_category_modal
     ]
   end

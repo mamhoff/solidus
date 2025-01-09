@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class SolidusAdmin::Resources::New::Component < SolidusAdmin::Resources::BaseComponent
-  def initialize(resource)
-    @resource = resource
+  def initialize(resource, closable: true)
+    super(resource)
+    @closable = closable
   end
 
   def form_id
@@ -14,8 +15,6 @@ class SolidusAdmin::Resources::New::Component < SolidusAdmin::Resources::BaseCom
   end
 
   def closable?
-    return false if request.referer&.include? "/new"
-
-    turbo_frame_request? || @resource.errors.any?
+    @closable
   end
 end

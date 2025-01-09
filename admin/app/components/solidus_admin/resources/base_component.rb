@@ -3,10 +3,11 @@
 class SolidusAdmin::Resources::BaseComponent < SolidusAdmin::BaseComponent
   def initialize(resource)
     @resource = resource
+    instance_variable_set("@#{resource_name}", resource)
   end
 
   def back_url
-    request.referer || solidus_admin.send("#{plural_resource_name}_path")
+    solidus_admin.send("#{plural_resource_name}_path")
   end
 
   def resource_name
