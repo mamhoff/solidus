@@ -171,13 +171,13 @@ RSpec.feature "Promotions admin" do
     it "allows adding a line_item_with_options condition", :js do
       visit solidus_promotions.edit_admin_promotion_path(promotion_with_benefit)
       click_link "Add Condition"
-      select("Line Item Option Value(s)", from: "Condition Type")
+      select("Line Item variant matches option values", from: "Condition Type")
       click_button "Add"
-      expect(page).to have_content("Line Item Option Value(s)")
+      expect(page).to have_content("Line Item variant matches option values")
       click_link "Add product"
       within(".promo-condition-option-value") do
-        # find('.select2-focusser').set(product.name)
-        # find('.select2-input').set(option_value.name)
+        select2_search(product.name, from: "ov-product-picker-0")
+        select2_search(option_value.name, from: "option-value-picker-0")
       end
       within("#benefits_adjust_line_item_#{promotion_with_benefit.benefits.first.id}_conditions") do
         find('input[type="submit"]', wait: 5).click
