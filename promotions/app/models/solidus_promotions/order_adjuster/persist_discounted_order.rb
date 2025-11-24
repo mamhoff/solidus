@@ -19,15 +19,14 @@ module SolidusPromotions
         order.shipments.flat_map(&:shipping_rates).each do |shipping_rate|
           shipping_rate.discounts = shipping_rate.current_discounts.map do |discount|
             SolidusPromotions::ShippingRateDiscount.create!(
-              shipping_rate: shipping_rate,
+              shipping_rate: shipping_rate.__getobj__,
               amount: discount.amount,
               label: discount.label,
               benefit: discount.source
             )
           end
         end
-        order.reset_current_discounts
-        order
+        order.__getobj__
       end
 
       private
@@ -43,7 +42,7 @@ module SolidusPromotions
       # @param [Array<SolidusPromotions::ItemDiscount>] item_discounts a list of calculated discounts for an item
       # @return [void]
       def update_adjustments(item, item_discounts)
-        promotion_adjustments = item.adjustments.select(&:promotion?)
+        promotion_adjustments = item.__getobj__.adjustments.select(&:promotion?)
 
         active_adjustments = item_discounts.map do |item_discount|
           update_adjustment(item, item_discount)
@@ -66,7 +65,7 @@ module SolidusPromotions
           item_adjustment.source == discount_item.source
         end
 
-        adjustment ||= item.adjustments.new(
+        adjustment ||= item.__getobj__.adjustments.new(
           source: discount_item.source,
           order_id: item.is_a?(Spree::Order) ? item.id : item.order_id,
           label: discount_item.label

@@ -23,7 +23,6 @@ module SolidusPromotions
       discounts.sum(&:amount)
     end
 
-    Spree::ShippingRate.prepend SolidusPromotions::DiscountableAmount
     Spree::ShippingRate.prepend self
   end
 end

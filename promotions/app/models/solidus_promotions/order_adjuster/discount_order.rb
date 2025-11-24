@@ -6,7 +6,7 @@ module SolidusPromotions
       attr_reader :order, :promotions, :dry_run
 
       def initialize(order, promotions, dry_run: false)
-        @order = order
+        @order = Discountable::Order.new(order)
         @promotions = promotions
         @dry_run = dry_run
       end

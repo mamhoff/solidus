@@ -14,15 +14,11 @@ module SolidusPromotions
     end
 
     def call
-      order.reset_current_discounts
-
       return order unless SolidusPromotions::Promotion.order_activatable?(order)
 
       discounted_order = DiscountOrder.new(order, promotions, dry_run: dry_run).call
 
-      PersistDiscountedOrder.new(discounted_order).call unless dry_run
-
-      order.reset_current_discounts
+      order = PersistDiscountedOrder.new(discounted_order).call unless dry_run
 
       unless dry_run
         # Since automations might have added a line item, we need to recalculate item total and item count here.
